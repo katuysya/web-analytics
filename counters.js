@@ -1,6 +1,6 @@
 // Счётчики статистики сайта «Ложка пользы».
-// Подключается на всех страницах перед script.js.
-// Информеры выводятся в подвал: footer .counters.
+// Подключается после HTML подвала, перед script.js.
+// Информеры выводятся в footer .counters.
 // Цели отправляет window.trackGoal(name).
 
 var LI_TYPE = '25.16';
@@ -28,7 +28,7 @@ var countersBox = document.querySelector('footer .counters');
 
   img.src = 'https://counter.yadro.ru/hit?t' + LI_TYPE +
     ';r' + escape(d.referrer) +
-    ((typeof (s) == 'undefined') ? '' :
+    ((typeof s === 'undefined') ? '' :
       ';s' + s.width + '*' + s.height + '*' +
       (s.colorDepth ? s.colorDepth : s.pixelDepth)) +
     ';u' + escape(d.URL) +
@@ -61,6 +61,8 @@ if (TOP100_ID) {
     }
 
     function file(el) {
+      if (!el) return '';
+
       var f = (el.getAttribute('href') || '')
         .split('#')[0]
         .replace('.html', '');
@@ -69,11 +71,13 @@ if (TOP100_ID) {
     }
 
     function hash(el) {
+      if (!el) return '';
       return (el.getAttribute('href') || '').split('#')[1] || file(el);
     }
 
     function card(el) {
-      return el.closest('.recipe-card').id;
+      var recipeCard = el.closest('.recipe-card');
+      return recipeCard ? recipeCard.id : '';
     }
 
     var DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -106,7 +110,8 @@ if (TOP100_ID) {
 
     if (page === 'home') {
       mark('.recipe-card', function (el) {
-        return 'home::week-top::' + hash(el.querySelector('a'));
+        var link = el.querySelector('a');
+        return link ? 'home::week-top::' + hash(link) : '';
       });
     }
 
@@ -132,11 +137,17 @@ if (TOP100_ID) {
 
     mark('.day-card a', function (el) {
       var day = el.closest('.day-card');
+      var mealHeading = el.parentNode.previousElementSibling;
 
-      return 'menu::week::' +
-        DAYS[[].indexOf.call(day.parentNode.children, day)] +
-        '::' +
-        MEALS[el.parentNode.previousElementSibling.textContent];
+      if (!day || !day.parentNode || !mealHeading) return '';
+
+      var dayIndex = [].indexOf.call(day.parentNode.children, day);
+      var dayName = DAYS[dayIndex];
+      var mealName = MEALS[mealHeading.textContent.trim()];
+
+      if (!dayName || !mealName) return '';
+
+      return 'menu::week::' + dayName + '::' + mealName;
     });
 
     mark('.about-copy .btn', 'about::approach::choose-recipe');
@@ -169,8 +180,10 @@ if (TOP100_ID) {
       };
 
       try {
-        w.top100Counter = new top100(options);
-      } catch (e) { }
+        w.top100Counter = new w.top100(options);
+      } catch (e) {
+        console.error('Ошибка инициализации Рамблер/топ-100:', e);
+      }
     });
 
     var n = d.getElementsByTagName('script')[0];
@@ -182,8 +195,7 @@ if (TOP100_ID) {
 
     s.type = 'text/javascript';
     s.async = true;
-    s.src = (d.location.protocol == 'https:' ? 'https:' : 'http:') +
-      '//st.top100.ru/top100/top100.js';
+    s.src = 'https://st.top100.ru/top100/top100.js';
 
     if (w.opera == '[object Opera]') {
       d.addEventListener('DOMContentLoaded', f, false);
@@ -203,7 +215,7 @@ if (TMR_ID) {
     start: (new Date()).getTime()
   });
 
-  // Библиотека счётчика на альтернативном домене.
+  // Адрес библиотеки из кабинета MyTracker: COM домен.
   (function (d, w, id) {
     if (d.getElementById(id)) return;
 
@@ -211,7 +223,7 @@ if (TMR_ID) {
     ts.type = 'text/javascript';
     ts.async = true;
     ts.id = id;
-    ts.src = 'https://mytopf.com/js/code-fb.js';
+    ts.src = 'https://mytopf.com/js/code.js';
 
     var f = function () {
       var s = d.getElementsByTagName('script')[0];
@@ -225,7 +237,8 @@ if (TMR_ID) {
     }
   })(document, window, 'tmr-code');
 
-  // Логотип и ссылка на исходном домене.
+  // Видимый логотип Top.Mail.Ru 88×31.
+  // Это отдельное изображение, а не библиотека счётчика.
   if (countersBox) {
     var tmrLink = document.createElement('a');
     tmrLink.href = 'https://top-fwz1.mail.ru/jump?from=' + TMR_ID;
