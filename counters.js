@@ -2,11 +2,10 @@
 // Подключается на всех страницах перед script.js; информеры выводятся в «подвал» (footer .counters).
 // Цели отправляет window.trackGoal(name) — её вызывает script.js.
 
-// ---- Идентификаторы (заполнить после регистрации, см. ИНСТРУКЦИЯ.md) ----
 var LI_TYPE = '25.16';        // LiveInternet: вид 25 (88x15, посетители за сегодня), цвет 16 (оливковый)
 var TOP100_ID = 7752738;            // Рамблер/топ-100 (Статистика от SberAds): номер счётчика
 var TOP100_COLOR = '194d33';  // цвет виджета Топ-100 (тёмно-зелёный; только строчными)
-var TMR_ID = '';              // MyTracker / Top.Mail.Ru: ID веб-счётчика
+var TMR_ID = '3805350';              // MyTracker / Top.Mail.Ru: ID веб-счётчика
 var TMR_LOGO_TYPE = 404;      // логотип Top.Mail.Ru 88x31 «рейтинг mail.ru», зелёный (цвет 10, #436925)
 
 var countersBox = document.querySelector('footer .counters');
@@ -141,7 +140,20 @@ if (TMR_ID) {
     countersBox.appendChild(tmrLink);
   }
 }
-
+<!-- Top.Mail.Ru counter -->
+<script type="text/javascript">
+var _tmr = window._tmr || (window._tmr = []);
+_tmr.push({id: "3805350", type: "pageView", start: (new Date()).getTime()});
+(function (d, w, id) {
+  if (d.getElementById(id)) return;
+  var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+  ts.src = "https://top-fwz1.mail.ru/js/code.js";
+  var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+  if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+})(document, window, "tmr-code");
+</script>
+<noscript><div><img src="https://top-fwz1.mail.ru/counter?id=3805350;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></div></noscript>
+<!-- /Top.Mail.Ru counter -->
 // ---- Цели сайта: recipe_details | recipe_search | favorite_add | suggest_recipe ----
 window.trackGoal = function (name) {
   if (TOP100_ID) window.top100d(TOP100_ID, 'reachGoal', name);
