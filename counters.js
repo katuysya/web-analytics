@@ -194,7 +194,6 @@ if (TOP100_ID) {
 }
 
 // ---- MyTracker / Top.Mail.Ru ----
-// Используется альтернативный домен mytopf.com.
 var _tmr = window._tmr || (window._tmr = []);
 
 if (TMR_ID) {
@@ -204,6 +203,7 @@ if (TMR_ID) {
     start: (new Date()).getTime()
   });
 
+  // Библиотека счётчика на альтернативном домене.
   (function (d, w, id) {
     if (d.getElementById(id)) return;
 
@@ -225,13 +225,13 @@ if (TMR_ID) {
     }
   })(document, window, 'tmr-code');
 
-  // Логотип Top.Mail.Ru 88×31 в подвале.
+  // Логотип и ссылка на исходном домене.
   if (countersBox) {
     var tmrLink = document.createElement('a');
-    tmrLink.href = 'https://mytopf.com/jump?from=' + TMR_ID;
+    tmrLink.href = 'https://top-fwz1.mail.ru/jump?from=' + TMR_ID;
 
     var tmrLogo = document.createElement('img');
-    tmrLogo.src = 'https://mytopf.com/counter?id=' +
+    tmrLogo.src = 'https://top-fwz1.mail.ru/counter?id=' +
       TMR_ID + ';t=' + TMR_LOGO_TYPE + ';l=1';
 
     tmrLogo.width = 88;
